@@ -42,6 +42,8 @@ import (
 	"github.com/gophish/gophish/middleware"
 	"github.com/gophish/gophish/models"
 	"github.com/gophish/gophish/webhook"
+
+	"github.com/joho/godotenv"
 )
 
 const (
@@ -59,6 +61,7 @@ var (
 
 func main() {
 	// Load the version
+	_ = godotenv.Load()
 
 	version, err := ioutil.ReadFile("./VERSION")
 	if err != nil {

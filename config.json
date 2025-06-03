@@ -1,7 +1,7 @@
 {
 	"admin_server": {
-		"listen_url": "127.0.0.1:3333",
-		"use_tls": true,
+		"listen_url": "172.19.180.41:3333",
+		"use_tls": false,
 		"cert_path": "gophish_admin.crt",
 		"key_path": "gophish_admin.key",
 		"trusted_origins": []
@@ -19,5 +19,12 @@
 	"logging": {
 		"filename": "",
 		"level": ""
-	}
+	},
+	"m365": {
+		"client_id": "ENV:M365_CLIENT_ID",
+		"client_secret": "ENV:M365_CLIENT_SECRET",
+		"redirect_uri": "https://172.19.180.41/m365/oauth/callback",
+		"scopes": "https://graph.microsoft.com/.default"
+}
+
 }
