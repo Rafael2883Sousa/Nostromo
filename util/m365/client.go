@@ -13,6 +13,7 @@ type TokenResponse struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 	ExpiresIn    int    `json:"expires_in"`
+	ExpiresAt    time.Time
 }
 
 func ExchangeCodeForToken(ctx context.Context, tenantID, clientID, clientSecret, code, redirectURI string) (*TokenResponse, error) {

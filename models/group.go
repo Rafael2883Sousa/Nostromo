@@ -19,6 +19,7 @@ type Group struct {
 	Name         string    `json:"name"`
 	ModifiedDate time.Time `json:"modified_date"`
 	Targets      []Target  `json:"targets" sql:"-"`
+	M365TenantID *uint
 }
 
 // GroupSummaries is a struct representing the overview of Groups.

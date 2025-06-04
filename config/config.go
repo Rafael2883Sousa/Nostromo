@@ -26,6 +26,13 @@ type PhishServer struct {
 	KeyPath   string `json:"key_path"`
 }
 
+type M365Config struct {
+	ClientID     string `json:"client_id"`
+	ClientSecret string `json:"client_secret"`
+	RedirectURI  string `json:"redirect_uri"`
+	Scopes       string `json:"scopes"`
+}
+
 // Config represents the configuration information.
 type Config struct {
 	AdminConf      AdminServer `json:"admin_server"`
@@ -37,6 +44,7 @@ type Config struct {
 	TestFlag       bool        `json:"test_flag"`
 	ContactAddress string      `json:"contact_address"`
 	Logging        *log.Config `json:"logging"`
+	M365 		   M365Config  `json:"m365"`
 }
 
 // Version contains the current gophish version
@@ -44,6 +52,7 @@ var Version = ""
 
 // ServerName is the server type that is returned in the transparency response.
 const ServerName = "gophish"
+var Global *Config
 
 // LoadConfig loads the configuration from the specified filepath
 func LoadConfig(filepath string) (*Config, error) {

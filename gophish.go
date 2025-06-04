@@ -41,6 +41,7 @@ import (
 	log "github.com/gophish/gophish/logger"
 	"github.com/gophish/gophish/middleware"
 	"github.com/gophish/gophish/models"
+	"github.com/gophish/gophish/worker"
 	"github.com/gophish/gophish/webhook"
 
 	"github.com/joho/godotenv"
@@ -75,6 +76,8 @@ func main() {
 
 	// Load the config
 	conf, err := config.LoadConfig(*configPath)
+	config.Global = conf
+
 	// Just warn if a contact address hasn't been configured
 	if err != nil {
 		log.Fatal(err)

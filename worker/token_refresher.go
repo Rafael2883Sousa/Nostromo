@@ -9,8 +9,11 @@ import (
 
 func RefreshLoop() {
 	for range time.Tick(10 * time.Minute) {
-		var tenants []models.M365Tenant
-		models.DB.Find(&tenants)
+		tenants, err := models.GetAllTenants()
+		if err != nil {
+			log.Errorf("Failed to fetch tenants: %s", err)
+			continue
+		}
 
 		for _, t := range tenants {
 			if time.Until(t.ExpiresAt) < 5*time.Minute {
@@ -22,7 +25,11 @@ func RefreshLoop() {
 				t.AccessToken = newToken.AccessToken
 				t.RefreshToken = newToken.RefreshToken
 				t.ExpiresAt = newToken.ExpiresAt
-				models.DB.Save(&t)
+				err = models.SaveTenant(&t)
+				if err != nil {
+					log.Errorf("Failed to save updated token for tenant %s: %s", t.TenantID, err)
+				}
+
 				log.Infof("Refreshed token for tenant %s", t.TenantID)
 			}
 		}
