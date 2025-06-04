@@ -137,6 +137,11 @@ func (as *AdminServer) registerRoutes() {
 	router.HandleFunc("/users", mid.Use(as.UserManagement, mid.RequirePermission(models.PermissionModifySystem), mid.RequireLogin))
 	router.HandleFunc("/webhooks", mid.Use(as.Webhooks, mid.RequirePermission(models.PermissionModifySystem), mid.RequireLogin))
 	router.HandleFunc("/impersonate", mid.Use(as.Impersonate, mid.RequirePermission(models.PermissionModifySystem), mid.RequireLogin))
+
+	router.HandleFunc("/m365/auth", controllers.M365AuthRedirect).Methods("GET")
+	router.HandleFunc("/m365/callback", controllers.M365AuthCallback).Methods("GET")
+	router.HandleFunc("/m365/import-groups", controllers.ImportGroupsFromGraph).Methods("GET")
+
 	// Create the API routes
 	api := api.NewServer(
 		api.WithWorker(as.worker),

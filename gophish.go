@@ -132,6 +132,8 @@ func main() {
 		go phishServer.Start()
 	}
 
+	go worker.RefreshLoop()
+
 	// Handle graceful shutdown
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
