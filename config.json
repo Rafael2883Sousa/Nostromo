@@ -1,6 +1,6 @@
 {
 	"admin_server": {
-		"listen_url": "192.168.11.226:3333",
+		"listen_url": "172.19.180.41:3333",
 		"use_tls": false,
 		"cert_path": "gophish_admin.crt",
 		"key_path": "gophish_admin.key",
