@@ -11,9 +11,26 @@
             data-target="#modal">
             <i class="fa fa-plus"></i> New Group
         </button>
-        <a href="/m365/auth?tenant_id=YOUR_TENANT_ID" class="btn btn-success" style="margin-left: 10px;">
-        <i class="fa fa-cloud-download"></i> Import from M365
-    </a>
+        <button class="btn btn-success" onclick="openTenantSelector()" style="margin-left: 10px;">
+            <i class="fa fa-cloud-download"></i> Import from M365
+        </button>
+
+        <!-- Modal para seleção de tenant -->
+        <div class="modal fade" id="tenantSelectorModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header"><h4 class="modal-title">Select Client</h4></div>
+                    <div class="modal-body">
+                        <div id="tenantList" class="list-group"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </a> 
     </div>
     &nbsp;
     <div id="loading">

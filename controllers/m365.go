@@ -4,11 +4,39 @@ import (
 	"net/http"
 	"net/url"
 	"time"
+	"encoding/json"
 
 	"github.com/gophish/gophish/config"
 	"github.com/gophish/gophish/models"
 	"github.com/gophish/gophish/util/m365"
 )
+
+func ListTenants(w http.ResponseWriter, r *http.Request) {
+	tenants, err := models.GetAllTenants()
+	if err != nil {
+		http.Error(w, "Failed to fetch tenants", http.StatusInternalServerError)
+		return
+	}
+
+	type output struct {
+		ID         uint   `json:"id"`
+		TenantID   string `json:"tenant_id"`
+		DisplayName string `json:"display_name"`
+	}
+
+	var result []output
+	for _, t := range tenants {
+		result = append(result, output{
+			ID:         t.ID,
+			TenantID:   t.TenantID,
+			DisplayName: t.DisplayName,
+		})
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
+}
+
 
 func M365AuthRedirect(w http.ResponseWriter, r *http.Request) {
 	tenantID := r.URL.Query().Get("tenant_id")

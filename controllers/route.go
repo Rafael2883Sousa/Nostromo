@@ -141,6 +141,7 @@ func (as *AdminServer) registerRoutes() {
 	router.HandleFunc("/m365/auth", M365AuthRedirect).Methods("GET")
 	router.HandleFunc("/m365/callback", M365AuthCallback).Methods("GET")
 	router.HandleFunc("/m365/import-groups", ImportGroupsFromGraph).Methods("GET")
+	router.HandleFunc("/api/m365/tenants", ListTenants).Methods("GET")
 
 	// Create the API routes
 	api := api.NewServer(
