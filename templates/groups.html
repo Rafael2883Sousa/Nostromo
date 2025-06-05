@@ -124,4 +124,48 @@
 </div>
 {{end}} {{define "scripts"}}
 <script src="/js/dist/app/groups.min.js"></script>
+
+<script>
+function openTenantSelector() {
+    $('#tenantSelectorModal').modal('show');
+    console.log("Abrindo modal de seleção de tenants..."); // DEBUG 1
+
+    fetch('/api/m365/tenants')
+        .then(res => {
+            console.log("Resposta recebida da API /api/m365/tenants"); // DEBUG 2
+            return res.json();
+        })
+        .then(data => {
+            console.log("Dados recebidos:", data); // DEBUG 3
+
+            const container = document.getElementById("tenantList");
+            container.innerHTML = ""; 
+
+            if (!Array.isArray(data)) {
+                container.innerHTML = "<div class='alert alert-danger'>Resposta inválida.</div>";
+                return;
+            }
+
+            if (data.length === 0) {
+                container.innerHTML = "<div class='alert alert-warning'>No tenants available.</div>";
+                return;
+            }
+
+            data.forEach(t => {
+                const btn = document.createElement("button");
+                btn.className = "list-group-item list-group-item-action";
+                btn.innerText = t.display_name + " (" + t.tenant_id + ")";
+                btn.onclick = function () {
+                    window.location.href = "/m365/auth?tenant_id=" + encodeURIComponent(t.tenant_id);
+                };
+                container.appendChild(btn);
+            });
+        })
+        .catch(err => {
+            console.error("Erro ao buscar tenants:", err); // DEBUG 4
+            document.getElementById("tenantList").innerHTML =
+              "<div class='alert alert-danger'>Erro ao carregar tenants.</div>";
+        });
+}
+</script>
 {{end}}
