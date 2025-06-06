@@ -18,17 +18,17 @@ func ListTenants(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	type output struct {
-		ID         uint   `json:"id"`
-		TenantID   string `json:"tenant_id"`
+	type tenantOut struct {
+		ID          uint   `json:"id"`
+		TenantID    string `json:"tenant_id"`
 		DisplayName string `json:"display_name"`
 	}
 
-	var result []output
+	var result []tenantOut
 	for _, t := range tenants {
-		result = append(result, output{
-			ID:         t.ID,
-			TenantID:   t.TenantID,
+		result = append(result, tenantOut{
+			ID:          t.ID,
+			TenantID:    t.TenantID,
 			DisplayName: t.DisplayName,
 		})
 	}
@@ -58,11 +58,16 @@ func M365AuthCallback(w http.ResponseWriter, r *http.Request) {
 	code := r.URL.Query().Get("code")
 	tenantID := r.URL.Query().Get("tenant_id")
 
+	log.Println("🔁 [OAuth] Callback recebido")
+	log.Printf("🔁 [OAuth] Query params: code=%s tenant_id=%s\n", code, tenantID)
+
 	tokenResp, err := m365.ExchangeCodeForToken(r.Context(), tenantID, config.Global.M365.ClientID, config.Global.M365.ClientSecret, code, config.Global.M365.RedirectURI)
+	log.Println("➡️ Trocando código por token...")
 	if err != nil {
 		http.Error(w, "Failed to exchange code for token", http.StatusInternalServerError)
 		return
 	}
+	log.Println("➡️ Trocando código por token...")
 
 	tenant := models.M365Tenant{
 		TenantID:     tenantID,
@@ -73,12 +78,14 @@ func M365AuthCallback(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = models.SaveTenant(&tenant)
+	log.Println("📝 Salvando tenant no banco")
 	if err != nil {
 		http.Error(w, "Failed to save tenant", http.StatusInternalServerError)
 		return
 	}
 
 	http.Redirect(w, r, "/dashboard", http.StatusFound)
+	log.Println("✅ Redirecionando para /groups")
 }
 
 func ImportGroupsFromGraph(w http.ResponseWriter, r *http.Request) {
